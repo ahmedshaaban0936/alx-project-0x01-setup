@@ -4,14 +4,16 @@ import Header from "@/components/layout/Header";
 import { PostData, PostProps } from "@/interfaces";
 import { useState } from "react";
 
-const Posts: React.FC<{ posts: PostProps[] }> = ({ posts }) => {
+const Posts: React.FC<PostProps[]> = ({ posts }) => {
   console.log(posts)
   const [isModalOpen, setModalOpen] = useState(false);
-  const [newPosts, setNewPosts] = useState(posts);
+  const [post, setPost] = useState<PostData | null>(null);
+
 
   const handleAddPost = (newPost: PostData) => {
-    setNewPosts([...newPosts, { ...newPost, id: newPosts.length + 1 }]);
+    setPost({ ...newPost, id: posts.length + 1 });
   };
+
 
   return (
     <div className="flex flex-col h-screen">
@@ -24,7 +26,7 @@ const Posts: React.FC<{ posts: PostProps[] }> = ({ posts }) => {
         </div>
         <div className="grid grid-cols-3 gap-2 ">
           {
-            newPosts?.map(({ title, body, userId, id }: PostProps, key: number) => (
+            posts?.map(({ title, body, userId, id }: PostProps, key: number) => (
               <PostCard title={title} body={body} userId={userId} id={id} key={key} />
             ))
           }
@@ -37,6 +39,8 @@ const Posts: React.FC<{ posts: PostProps[] }> = ({ posts }) => {
     </div>
   )
 }
+
+
 
 export async function getStaticProps() {
   const response = await fetch("https://jsonplaceholder.typicode.com/posts")

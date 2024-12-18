@@ -1,44 +1,41 @@
 // pages/users/index.tsx
-import { GetStaticProps } from 'next';
+import { useState } from 'react';
 import UserCard from '../../components/common/UserCard';
+import UserModal from '../../components/common/UserModal';
+import { UserData } from '../../interfaces';
 
-// Example data type (adjust accordingly)
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+const UsersPage = () => {
+  const [users, setUsers] = useState<UserData[]>([]);  // Array of users
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-interface UsersPageProps {
-  users: User[];
-}
+  const handleAddUser = (userData: UserData) => {
+    setUsers((prevUsers) => [...prevUsers, userData]);
+  };
 
-const UsersPage: React.FC<UsersPageProps> = ({ users }) => {
   return (
     <div className="users-page">
-      <h1 className="text-4xl">Users List</h1>
+      <h1 className="text-4xl mb-4">Users List</h1>
+      
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="bg-green-500 text-white px-4 py-2 rounded mb-4"
+      >
+        Add New User
+      </button>
+
       <div className="user-list">
         {users.map((user) => (
           <UserCard key={user.id} user={user} />
         ))}
       </div>
+
+      <UserModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleAddUser}
+      />
     </div>
   );
-};
-
-// Fetch users data at build time (static generation)
-export const getStaticProps: GetStaticProps = async () => {
-  // Replace with your data fetching logic (API call or static data)
-  const users = [
-    { id: '1', name: 'John Doe', email: 'john@example.com' },
-    { id: '2', name: 'Jane Smith', email: 'jane@example.com' },
-  ];
-
-  return {
-    props: {
-      users,
-    },
-  };
 };
 
 export default UsersPage;
