@@ -1,35 +1,44 @@
-import Header from "@/components/layout/Header";
-import UserCard from "@/components/common/UserCard";
-import { UserProps } from "@/interfaces";
+// pages/users/index.tsx
+import { GetStaticProps } from 'next';
+import UserCard from '../../components/common/UserCard';
 
-const Users: React.FC<{ users: UserProps[] }> = ({ users }) => {
+// Example data type (adjust accordingly)
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface UsersPageProps {
+  users: User[];
+}
+
+const UsersPage: React.FC<UsersPageProps> = ({ users }) => {
   return (
-    <div className="flex flex-col h-screen">
-      <Header />
-      <main className="p-4">
-        <div className="flex justify-between">
-          <h1 className="text-2xl font-semibold">User Content</h1>
-          <button className="bg-blue-700 px-4 py-2 rounded-full text-white">Add User</button>
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          {users?.map((user: UserProps, key: number) => (
-            <UserCard {...user} key={key} />
-          ))}
-        </div>
-      </main>
+    <div className="users-page">
+      <h1 className="text-4xl">Users List</h1>
+      <div className="user-list">
+        {users.map((user) => (
+          <UserCard key={user.id} user={user} />
+        ))}
+      </div>
     </div>
   );
 };
 
-export async function getStaticProps() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/users");
-  const users = await response.json();
+// Fetch users data at build time (static generation)
+export const getStaticProps: GetStaticProps = async () => {
+  // Replace with your data fetching logic (API call or static data)
+  const users = [
+    { id: '1', name: 'John Doe', email: 'john@example.com' },
+    { id: '2', name: 'Jane Smith', email: 'jane@example.com' },
+  ];
 
   return {
     props: {
-      users
-    }
+      users,
+    },
   };
-}
+};
 
-export default Users;
+export default UsersPage;
