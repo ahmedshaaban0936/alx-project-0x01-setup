@@ -33,6 +33,7 @@ const UsersPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleAddUser}
+        onSubmit={handleAddUser}  // Ensure you pass the onSubmit function
       />
     </div>
   );

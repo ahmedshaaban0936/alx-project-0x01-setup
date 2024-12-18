@@ -1,79 +1,109 @@
-import { PostData, PostModalProps } from "@/interfaces";
-import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// components/common/UserModal.tsx
+import React, { useState } from 'react';
+import { UserData, UserModalProps } from '../../interfaces';
 
-
-
-const PostModal: React.FC<PostModalProps> = ({ onClose, onSubmit }) => {
-  const [post, setPost] = useState<PostData>({
-    userId: 1,
-    title: "",
-    body: ""
+const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSave, onSubmit }) => {
+  const [formData, setFormData] = useState<UserData>({
+    id: 0, 
+    name: '', 
+    username: '', 
+    email: '', 
+    address: {
+      street: '', 
+      suite: '', 
+      city: '', 
+      zipcode: '', 
+      geo: { lat: '', lng: '' }
+    }, 
+    phone: '', 
+    website: '', 
+    company: { 
+      name: '', 
+      catchPhrase: '', 
+      bs: '' 
+    }
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setPost((prevPost) => ({ ...prevPost, [name]: value }));
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(post);
-    onClose();
+  const handleSubmit = () => {
+    onSubmit(formData);  // Ensure onSubmit is called here
+    onClose();  // Close modal after submission
   };
+
+  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white rounded-lg p-8 shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">Add New Post</h2>
-        <form onSubmit={handleSubmit}>
+    <div className="modal-overlay fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
+      <div className="modal bg-white p-6 rounded-lg max-w-lg w-full">
+        <h2 className="text-2xl mb-4">Add New User</h2>
+
+        <form>
           <div className="mb-4">
-            <label htmlFor="userId" className="block text-gray-700 font-medium mb-2">User ID</label>
-            <input
-              type="number"
-              id="userId"
-              name="userId"
-              value={post.userId}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="title" className="block text-gray-700 font-medium mb-2">Title</label>
+            <label className="block text-sm">Name</label>
             <input
               type="text"
-              id="title"
-              name="title"
-              value={post.title}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter post title"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
             />
           </div>
+
           <div className="mb-4">
-            <label htmlFor="body" className="block text-gray-700 font-medium mb-2">Body</label>
-            <textarea
-              id="body"
-              name="body"
-              value={post.body}
-              onChange={handleChange}
-              rows={4}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter post content"
+            <label className="block text-sm">Username</label>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
             />
           </div>
-          <div className="flex justify-between items-center">
+
+          <div className="mb-4">
+            <label className="block text-sm">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm">Phone</label>
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+
+          <div className="flex justify-between items-center mt-4">
             <button
               type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800 focus:outline-none"
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+              onClick={handleSubmit} // Call the handleSubmit function on click
             >
-              Cancel
+              Save
             </button>
             <button
-              type="submit"
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+              type="button"
+              className="bg-red-500 text-white px-4 py-2 rounded"
+              onClick={onClose}
             >
-              Add Post
+              Close
             </button>
           </div>
         </form>
@@ -82,4 +112,4 @@ const PostModal: React.FC<PostModalProps> = ({ onClose, onSubmit }) => {
   );
 };
 
-export default PostModal;
+export default UserModal;
